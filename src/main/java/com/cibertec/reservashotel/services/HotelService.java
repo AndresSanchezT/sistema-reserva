@@ -30,4 +30,6 @@ public class HotelService {
 	  public void eliminar(Long id) {
 		  hotelRepository.deleteById(id);
 	  }
+	  
+	  
 }

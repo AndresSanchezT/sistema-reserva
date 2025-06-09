@@ -1,5 +1,6 @@
 package com.cibertec.reservashotel.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,5 +17,9 @@ public class DepartamentoService {
 
 	public Optional<Departamento> buscarPorId(Long id) {
 		return departamentoRepository.findById(id);
+	}
+	
+	public List<Departamento> listar(){
+		return departamentoRepository.findAll();
 	}
 }

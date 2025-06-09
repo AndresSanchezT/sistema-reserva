@@ -33,7 +33,7 @@
                     <a class="nav-link active" href="#">Inicio</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/departamentos}">Reservar</a>
+                    <a class="nav-link" th:href="@{reserva/departamentos}">Reservar</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Contacto</a>
@@ -45,7 +45,7 @@
 				    </a>
 				    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMantenimiento">
 				        <li><a class="dropdown-item" th:href="@{/reservas}">Reservas</a></li>
-				        <li><a class="dropdown-item" th:href="@{/hoteles/seleccionar-departamento}">Hoteles</a></li>
+				        <li><a class="dropdown-item" th:href="@{/admin/seleccionar_departamento}">Hoteles</a></li>
 				        <li><a class="dropdown-item" th:href="@{/departamentos}">Departamentos</a></li>
 				    </ul>
 				</li>
@@ -110,7 +110,7 @@
 </section>
 
     <div class="text-center">
-        <a class="btn btn-primary btn-lg" th:href="@{/departamentos}">Reservar Hotel</a>
+        <a class="btn btn-primary btn-lg" th:href="@{reserva/departamentos}">Reservar Hotel</a>
     </div>
 </main>
 

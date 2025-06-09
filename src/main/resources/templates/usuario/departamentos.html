@@ -19,7 +19,7 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title" th:text="${dpto.nombre}">Nombre del departamento</h5>
                         <p class="card-text" th:text="${dpto.detalle ?: 'Sin descripción'}">Detalles del departamento</p>
-                        <a th:href="@{'/departamento/' + ${dpto.id} + '/hoteles'}" class="btn btn-primary mt-auto">Ver Hoteles</a>
+                        <a th:href="@{/reserva/hoteles(depId=${dpto.id})}" class="btn btn-primary mt-auto">Ver Hoteles</a>
                     </div>
                 </div>
             </div>

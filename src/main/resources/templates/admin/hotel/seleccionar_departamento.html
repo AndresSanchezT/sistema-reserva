@@ -10,7 +10,7 @@
     <h2>Selecciona un Departamento</h2>
     <div class="list-group">
         <a th:each="dep : ${departamentos}"
-		   th:href="@{'/admin/departamento/' + ${dep.id} + '/hoteles'}"
+		   th:href="@{/admin/hoteles(depId=${dep.id})}"
 		   class="list-group-item list-group-item-action">
 		    <span th:text="${dep.nombre}">Departamento Nombre</span>
 		</a>

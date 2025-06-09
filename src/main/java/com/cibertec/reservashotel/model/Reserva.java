@@ -1,6 +1,7 @@
 package com.cibertec.reservashotel.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -28,8 +29,12 @@ public class Reserva {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL)
-    private List<DetalleReserva> detalles;
+    @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetalleReserva> detalles = new ArrayList<>();
+    
+    @ManyToOne
+    @JoinColumn(name = "hotel_id")
+    private Hotel hotel;
 
 	public Reserva() {
 	}
@@ -109,4 +114,12 @@ public class Reserva {
 		this.detalles = detalles;
 	}
   
+	public Hotel getHotel() {
+		return hotel;
+	}
+
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
+	}
+
 }

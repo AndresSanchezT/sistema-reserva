@@ -24,7 +24,7 @@ public class Hotel {
     @JoinColumn(name = "departamento_id")
     private Departamento departamento;
 
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Habitacion> habitaciones;
 
 	public Hotel() {

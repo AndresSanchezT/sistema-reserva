@@ -121,5 +121,11 @@ public class Reserva {
 	public void setHotel(Hotel hotel) {
 		this.hotel = hotel;
 	}
+	
+//	se agrega esta funcion para controlar mejor  la persistencia bidireccional 
+	public void addDetalle(DetalleReserva detalle) {
+	    detalle.setReserva(this);
+	    this.detalles.add(detalle);
+	}
 
 }

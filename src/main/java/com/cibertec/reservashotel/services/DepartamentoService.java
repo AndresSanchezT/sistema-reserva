@@ -22,4 +22,12 @@ public class DepartamentoService {
 	public List<Departamento> listar(){
 		return departamentoRepository.findAll();
 	}
+	
+	public Departamento guardar(Departamento departamento) {
+		  return departamentoRepository.save(departamento);
+	  }
+	
+	public void eliminar(Long depId) {
+		departamentoRepository.deleteById(depId);
+	}
 }

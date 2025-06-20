@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8" />
-	<title>Hoteles de [[${departamento.nombre}]]</title>
+	<title>Departamentos</title>
 
 	<!-- Bootstrap CSS -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -14,9 +14,10 @@
 <body>
 	<div th:replace="compartido/navbar :: navbar"></div>
 	<div class="container my-5" style="padding-top: 20px;">
+
 		<!-- Encabezado -->
 		<h2 class="mb-4">
-			Hoteles en <span th:text="${departamento.nombre}">Nombre-Depto</span>
+			<span>Departamentos</span>
 		</h2>
 
 		<!-- Tabla de hoteles -->
@@ -25,33 +26,30 @@
 				<thead class="table-dark">
 					<tr>
 						<th>Nombre</th>
-						<th>Dirección</th>
-						<th class="text-center">Habitaciones</th>
+						<th>Detalle</th>
 						<th class="text-center">Opciones</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="hotel : ${hoteles}">
-						<td th:text="${hotel.nombre}">Hotel Nombre</td>
-						<td th:text="${hotel.direccion}">Av. Ejemplo 123</td>
-						<td class="text-center" th:text="${hotel.cantidadHabitaciones}">0</td>
+					<tr th:each="dep : ${departamentos}">
+
+						<td th:text="${dep.nombre}">Hotel Nombre</td>
+						<td th:text="${dep.detalle}">Av. Ejemplo 123</td>
 						<td class="text-center d-flex justify-content-center gap-2">
-							<a th:href="@{'/admin/hoteles/editar/' + ${hotel.id}}"
+							<a th:href="@{'/admin/departamentos/editar/' + ${dep.id}}"
 								class="btn btn-sm btn-outline-primary" title="Editar">
 								<i class="bi bi-pencil-square"></i>
 							</a>
-
 							<!-- Formulario de eliminación -->
-							<form th:action="@{/admin/hoteles/eliminar/{id}(id=${hotel.id})}" method="post"
+							<form th:action="@{/admin/departamentos/eliminar/{id}(id=${dep.id})}" method="post"
 								onsubmit="return confirm('¿Deseas eliminar este hotel?');">
-								<input type="hidden" name="depId" th:value="${departamento.id}" />
 								<button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
 									<i class="bi bi-trash"></i>
 								</button>
 							</form>
 						</td>
 					</tr>
-					<tr th:if="${#lists.isEmpty(hoteles)}">
+					<tr th:if="${#lists.isEmpty(departamentos)}">
 						<td colspan="4" class="text-center fst-italic">
 							No hay hoteles registrados en este departamento.
 						</td>
@@ -66,8 +64,8 @@
 				← Volver a departamentos
 			</a>
 
-			<a th:href="@{/admin/hoteles/nuevo}" class="btn btn-primary ms-auto">
-				+ Nuevo hotel
+			<a th:href="@{/admin/departamentos/nuevo}" class="btn btn-primary ms-auto">
+				+ Nuevo Departamento
 			</a>
 		</div>
 	</div>

@@ -2,6 +2,8 @@ package com.cibertec.reservashotel.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +22,7 @@ public class Departamento {
     private String detalle;
 
     @OneToMany(mappedBy = "departamento", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Hotel> hoteles;
 
     public Departamento() {}

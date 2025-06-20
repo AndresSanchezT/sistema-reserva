@@ -37,7 +37,7 @@ public class Reserva {
     private Hotel hotel;
 
 	public Reserva() {
-	}
+	}	
 
 	public Reserva(LocalDate fechaReserva, LocalDate fechaInicio, LocalDate fechaFin, double total, String estado,
 			Cliente cliente, List<DetalleReserva> detalles) {

@@ -3,7 +3,9 @@ package com.cibertec.reservashotel.controller.usuario;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -63,14 +65,15 @@ public class HotelReservaController {
     public String mostrarFormularioReserva(@PathVariable("id") Long hotelId, Model model) {
 
         Hotel hotel = hotelService.buscarPorId(hotelId).orElse(null);
+        Map<Long, Double> mapaPrecios = hotel.getHabitaciones()
+    		    .stream()
+    		    .collect(Collectors.toMap(h -> h.getId(), h -> h.getPrecio()));
 
-        if (hotel == null) {
-            return "redirect:/reserva/hoteles";
-        }
         Reserva reserva = new Reserva();
         reserva.setCliente(new Cliente());
 
         model.addAttribute("hotel", hotel);
+        model.addAttribute("mapaPrecios", mapaPrecios);
         model.addAttribute("departamento", hotel.getDepartamento());
         model.addAttribute("habitaciones", hotel.getHabitaciones());
         model.addAttribute("reserva", reserva);

@@ -47,6 +47,14 @@ public class HotelMantenimientoController {
     @Autowired
     private DetalleReservaService detalleReservaService;
 
+    @GetMapping("/reservas/buscar")
+    public String buscarReservasPorDni(@RequestParam("dni") String dni, Model model) {
+        List<Reserva> reservas = reservaService.buscarReservasPorDniCliente(dni);
+        model.addAttribute("reservas", reservas);
+        return "admin/reserva/lista"; // o la ruta correcta a tu HTML actual
+    }
+    
+    
     @GetMapping("/seleccionar_departamento")
     public String seleccionarDepartamento(Model model) {
         model.addAttribute("departamentos", departamentoService.listar());

@@ -11,17 +11,35 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
 </head>
 s
+
 <body>
 	<div th:replace="compartido/navbar :: navbar"></div>
 	<div class="container my-5 mt-5">
 
 		<!-- Encabezado -->
-		<h2 class="mb-4">
-			<span>Reservas</span>
-		</h2>
+		<div class="d-flex justify-content-between align-items-center">
+			<div>
+				<h2 class="tittle">
+					<span>Reservas</span>
+				</h2>
+			</div>
+			<div>
+				<form th:action="@{/admin/reservas/buscar}" method="get" class="d-flex gap-2">
+					<input type="text" name="dni" class="form-input" placeholder="Ingrese DNI" />
+					<button type="submit" class="btn btn-primary">
+						<i class="bi bi-search"></i> Buscar por DNI
+					</button>
+					<a th:href="@{/admin/reservas}" class="btn btn-secondary">
+						<i class="bi bi-list"></i> Mostrar todas
+					</a>
+				</form>
+
+			</div>
+		</div>
+
 
 		<!-- Tabla de hoteles -->
-		<div class="table-responsive">
+		<div class="table-responsive mt-3">
 			<table class="table table-striped table-bordered align-middle">
 				<thead class="table-dark">
 					<tr>
@@ -61,7 +79,7 @@ s
 					</tr>
 					<tr th:if="${#lists.isEmpty(reservas)}">
 						<td colspan="4" class="text-center fst-italic">
-							No hay reservas registradas en este departamento.
+							No hay reservas registradas para este cliente.
 						</td>
 					</tr>
 				</tbody>

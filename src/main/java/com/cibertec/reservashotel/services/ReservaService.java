@@ -33,4 +33,8 @@ public class ReservaService {
 	public void eliminar(Long id) {
 		reservaRepository.deleteById(id);
 	}
+	
+	public List<Reserva> buscarReservasPorDniCliente(String dni){
+		return reservaRepository.findByClienteDni(dni);
+	}
 }

@@ -15,9 +15,19 @@
 	<div th:replace="compartido/navbar :: navbar"></div>
 	<div class="container my-5" style="padding-top: 20px;">
 		<!-- Encabezado -->
-		<h2 class="mb-4">
-			Hoteles en <span th:text="${departamento.nombre}">Nombre-Depto</span>
-		</h2>
+
+		<div class="d-flex justify-content-between align-items-center">
+			<div>
+				<h2 class="mb-4">
+					Hoteles en <span th:text="${departamento.nombre}">Nombre-Depto</span>
+				</h2>
+			</div>
+			<div class="d-flex align-items-end gap-2 mb-3">
+				<input type="date" class="form-control" placeholder="Fecha inicio" style="max-width: 200px;">
+				<input type="date" class="form-control" placeholder="Fecha fin" style="max-width: 200px;">
+				<a class="btn btn-primary"style="white-space: nowrap;">habitaciones disponibles</a>
+			</div>
+		</div>
 
 		<!-- Tabla de hoteles -->
 		<div class="table-responsive">

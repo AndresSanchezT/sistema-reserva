@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Contáctanos - Sistema de Reservas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap 5.3.6 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Font Awesome para iconos -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- AOS (Animate On Scroll) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+<!-- Particles.js for animated background -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+
+<!-- GSAP for smooth animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<style>
+:root {
+  --primary-color: #8b5cf6;
+  --primary-dark: #7c3aed;
+  --primary-light: #a78bfa;
+  --secondary-color: #f8fafc;
+  --accent-color: #c084fc;
+  --accent-dark: #9333ea;
+  --text-dark: #1e1b4b;
+  --text-light: #6b7280;
+  --purple-50: #faf5ff;
+  --purple-100: #f3e8ff;
+  --purple-200: #e9d5ff;
+  --purple-300: #d8b4fe;
+  --purple-900: #581c87;
+  --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%);
+  --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
+  --gradient-light: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 50%, #ddd6fe 100%);
+  --shadow-lg: 0 20px 25px -5px rgba(139, 92, 246, 0.15), 0 10px 10px -5px rgba(139, 92, 246, 0.08);
+  --shadow-xl: 0 25px 50px -12px rgba(139, 92, 246, 0.25);
+  --shadow-purple: 0 4px 20px rgba(139, 92, 246, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  color: var(--text-dark);
+  background: var(--gradient-light);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Animated Background */
+#particles-js {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background: var(--gradient-light);
+}
+
+.background-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(192, 132, 252, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);
+  z-index: -1;
+  animation: backgroundFloat 20s ease-in-out infinite;
+}
+
+@keyframes backgroundFloat {
+  0%, 100% { 
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(192, 132, 252, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);
+  }
+  50% { 
+    background: 
+      radial-gradient(circle at 80% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 20% 70%, rgba(192, 132, 252, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 60% 20%, rgba(147, 51, 234, 0.15) 0%, transparent 50%);
+  }
+}
+
+/* Header Section */
+.hero-section {
+  background: var(--gradient-purple);
+  color: white;
+  padding: 120px 0 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="1000,100 1000,0 0,100"/></svg>'),
+    linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.05) 50%, transparent 70%);
+  background-size: cover, 200% 200%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0 0, -200% -200%; }
+  100% { background-position: 0 0, 200% 200%; }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title {
+  font-size: 3.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  background: linear-gradient(45deg, #ffffff, #e9d5ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 1.35rem;
+  font-weight: 300;
+  opacity: 0.95;
+  max-width: 650px;
+  margin: 0 auto;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* Contact Cards */
+.contact-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  backdrop-filter: blur(20px);
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.05), transparent);
+  transition: left 0.6s ease;
+}
+
+.contact-card:hover::before {
+  left: 100%;
+}
+
+.contact-card:hover {
+  transform: translateY(-15px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-light);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.contact-icon {
+  width: 80px;
+  height: 80px;
+  background: var(--gradient-purple);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  color: white;
+  font-size: 1.8rem;
+  box-shadow: var(--shadow-purple);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.contact-card:hover .contact-icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+}
+
+.contact-card h4 {
+  color: var(--text-dark);
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  font-size: 1.3rem;
+}
+
+.contact-card p {
+  color: var(--text-dark);
+  margin-bottom: 0.8rem;
+  line-height: 1.6;
+}
+
+.contact-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  background: var(--purple-50);
+  border: 1px solid var(--purple-200);
+}
+
+.contact-link:hover {
+  color: white;
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-purple);
+}
+
+/* Map Section */
+.map-section {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: var(--shadow-lg);
+  margin: 4rem 0;
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  backdrop-filter: blur(20px);
+  transition: all 0.3s ease;
+}
+
+.map-section:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-5px);
+}
+
+.map-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(139, 92, 246, 0.15);
+  border: 3px solid var(--purple-100);
+  transition: all 0.3s ease;
+}
+
+.map-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(139, 92, 246, 0.05) 50%, transparent 70%);
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.map-container:hover::before {
+  opacity: 1;
+}
+
+.map-container:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 20px 50px rgba(139, 92, 246, 0.25);
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 450px;
+  border: none;
+  filter: saturate(0.9) contrast(1.1) hue-rotate(10deg);
+  transition: filter 0.4s ease;
+}
+
+.map-container:hover iframe {
+  filter: saturate(1.1) contrast(1.2) hue-rotate(0deg);
+}
+
+/* Social Media Section */
+.social-section {
+  background: var(--gradient-purple);
+  color: white;
+  padding: 5rem 0;
+  margin-top: 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.social-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(255,255,255,0.08) 0%, transparent 50%);
+  animation: socialFloat 15s ease-in-out infinite;
+}
+
+@keyframes socialFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+.social-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  background: linear-gradient(45deg, #ffffff, #e9d5ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+
+.social-icon {
+  display: inline-flex;
+  width: 70px;
+  height: 70px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.6rem;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255,255,255,0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.social-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.social-icon:hover::before {
+  left: 100%;
+}
+
+.social-icon:hover {
+  background: rgba(255,255,255,0.95);
+  color: var(--primary-color);
+  transform: translateY(-8px) scale(1.15) rotate(5deg);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+  border-color: rgba(255,255,255,0.8);
+}
+
+/* Contact Form */
+.contact-form {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  padding: 4rem;
+  box-shadow: var(--shadow-lg);
+  margin: 4rem 0;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-form::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.03) 0%, transparent 70%);
+  animation: formGlow 8s ease-in-out infinite;
+}
+
+@keyframes formGlow {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+}
+
+.contact-form:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-8px);
+}
+
+.form-floating > .form-control {
+  border: 2px solid var(--purple-200);
+  border-radius: 16px;
+  padding: 1.2rem 1rem;
+  font-size: 1rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 2;
+}
+
+.form-floating > .form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.3rem rgba(139, 92, 246, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  transform: scale(1.02);
+}
+
+.form-floating > label {
+  color: var(--text-light);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.btn-primary-custom {
+  background: var(--gradient-purple);
+  border: none;
+  border-radius: 16px;
+  padding: 1rem 3rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: var(--shadow-purple);
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.btn-primary-custom::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.btn-primary-custom:hover::before {
+  left: 100%;
+}
+
+.btn-primary-custom:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+}
+
+/* Stats Section */
+.stats-section {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 5rem 0;
+  margin: 4rem 0;
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(45deg, transparent 30%, rgba(139, 92, 246, 0.02) 50%, transparent 70%),
+    radial-gradient(circle at 25% 25%, rgba(192, 132, 252, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.05) 0%, transparent 50%);
+  animation: statsFloat 12s ease-in-out infinite;
+}
+
+@keyframes statsFloat {
+  0%, 100% { transform: translateX(0px); }
+  50% { transform: translateX(20px); }
+}
+
+.stat-item {
+  text-align: center;
+  padding: 2.5rem;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-10px);
+}
+
+.stat-number {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: var(--gradient-purple);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  text-shadow: 0 4px 8px rgba(139, 92, 246, 0.3);
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover .stat-number {
+  transform: scale(1.1);
+}
+
+.stat-label {
+  color: var(--text-dark);
+  font-weight: 600;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+
+.stat-label {
+  color: var(--text-dark);
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+/* Footer */
+.footer {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: white;
+  padding: 3rem 0 2rem;
+}
+
+.footer-content {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-bottom {
+  text-align: center;
+  color: rgba(255,255,255,0.7);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .contact-card {
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .social-icons {
+    gap: 1rem;
+  }
+  
+  .social-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+}
+
+/* Animations */
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div th:replace="compartido/navbar :: navbar"></div>
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container hero-content">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center" data-aos="fade-up">
+        <h1 class="hero-title">Contáctanos</h1>
+        <p class="hero-subtitle">Estamos aquí para hacer tu experiencia inolvidable. Conéctate con nosotros y descubre cómo podemos ayudarte.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main class="container">
+  
+  <!-- Contact Cards -->
+  <section class="py-5">
+    <div class="row g-4" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-lg-4 col-md-6">
+        <div class="contact-card text-center">
+          <div class="contact-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <h4>Nuestra Ubicación</h4>
+          <p>Av. Abancay 123<br>Lima Centro, Perú</p>
+          <a href="https://maps.google.com" class="contact-link" target="_blank">
+            <i class="fas fa-external-link-alt"></i> Ver en Maps
+          </a>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6">
+        <div class="contact-card text-center">
+          <div class="contact-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <h4>Correo Electrónico</h4>
+          <p>contacto@reservashotel.com</p>
+          <p>soporte@reservashotel.com</p>
+          <a href="mailto:contacto@reservashotel.com" class="contact-link">
+            <i class="fas fa-paper-plane"></i> Enviar Email
+          </a>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6">
+        <div class="contact-card text-center">
+          <div class="contact-icon">
+            <i class="fas fa-phone"></i>
+          </div>
+          <h4>Teléfono</h4>
+          <p>+51 999 888 777</p>
+          <p>Lun - Dom: 8:00 AM - 10:00 PM</p>
+          <a href="tel:+51999888777" class="contact-link">
+            <i class="fas fa-phone-alt"></i> Llamar Ahora
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form -->
+  <section class="contact-form" data-aos="fade-up" data-aos-delay="200">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <h3 class="text-center mb-4">Envíanos un Mensaje</h3>
+        <form>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="nombre" placeholder="Tu nombre">
+                <label for="nombre">Nombre Completo</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="email" class="form-control" id="email" placeholder="Tu email">
+                <label for="email">Correo Electrónico</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="asunto" placeholder="Asunto">
+                <label for="asunto">Asunto</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea class="form-control" id="mensaje" style="height: 120px" placeholder="Tu mensaje"></textarea>
+                <label for="mensaje">Mensaje</label>
+              </div>
+            </div>
+            <div class="col-12 text-center">
+              <button type="submit" class="btn btn-primary-custom btn-lg">
+                <i class="fas fa-paper-plane me-2"></i>Enviar Mensaje
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Section -->
+  <section class="map-section" data-aos="fade-up" data-aos-delay="300">
+    <h3 class="text-center mb-4">Encuéntranos</h3>
+    <div class="map-container">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3900.8299325404187!2d-77.03687228536043!3d-12.055364991449424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8c322f0502b%3A0xf845aa76d312e1ee!2sAv.%20Abancay%2C%20Lima%2015001!5e0!3m2!1ses-419!2spe!4v1719763548395!5m2!1ses-419!2spe"
+      allowfullscreen="" loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section" data-aos="fade-up" data-aos-delay="400">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-item">
+            <span class="stat-number" data-target="15000">0</span>
+            <div class="stat-label">Clientes Satisfechos</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-item">
+            <span class="stat-number" data-target="500">0</span>
+            <div class="stat-label">Hoteles Afiliados</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-item">
+            <span class="stat-number" data-target="24">0</span>
+            <div class="stat-label">Soporte 24/7</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="stat-item">
+            <span class="stat-number" data-target="95">0</span>
+            <div class="stat-label">% Satisfacción</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Social Media Section -->
+<section class="social-section" data-aos="fade-up" data-aos-delay="500">
+  <div class="container text-center">
+    <h3 class="social-title">Síguenos en Redes Sociales</h3>
+    <p class="mb-4">Mantente conectado y no te pierdas nuestras ofertas especiales</p>
+    <div class="social-icons">
+      <a href="https://wa.me/51999888777" class="social-icon" title="WhatsApp" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+      <a href="https://www.instagram.com/" class="social-icon" title="Instagram" target="_blank">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://t.me/usuarioTelegram" class="social-icon" title="Telegram" target="_blank">
+        <i class="fab fa-telegram-plane"></i>
+      </a>
+      <a href="https://www.facebook.com/" class="social-icon" title="Facebook" target="_blank">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="https://x.com/" class="social-icon" title="X" target="_blank">
+        <i class="fab fa-x-twitter"></i>
+      </a>
+      <a href="https://www.linkedin.com/" class="social-icon" title="LinkedIn" target="_blank">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+          <h5>Sistema de Reservas</h5>
+          <p>Tu plataforma confiable para encontrar y reservar los mejores hoteles en Perú y el mundo.</p>
+        </div>
+        <div class="col-lg-2 col-md-6 mb-4">
+          <h6>Enlaces</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-light">Inicio</a></li>
+            <li><a href="#" class="text-light">Hoteles</a></li>
+            <li><a href="#" class="text-light">Reservas</a></li>
+            <li><a href="#" class="text-light">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <h6>Soporte</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-light">Centro de Ayuda</a></li>
+            <li><a href="#" class="text-light">Política de Privacidad</a></li>
+            <li><a href="#" class="text-light">Términos de Uso</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <h6>Newsletter</h6>
+          <p>Suscríbete para recibir ofertas especiales</p>
+          <div class="input-group">
+            <input type="email" class="form-control" placeholder="Tu email">
+            <button class="btn btn-primary-custom" type="button">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Sistema de Reservas de Hoteles. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+<script>
+// Initialize AOS (Animate On Scroll)
+AOS.init({
+  duration: 1000,
+  easing: 'ease-in-out',
+  once: true
+});
+
+// Counter Animation
+function animateCounters() {
+  const counters = document.querySelectorAll('.stat-number');
+  
+  counters.forEach(counter => {
+    const target = parseInt(counter.getAttribute('data-target'));
+    const increment = target / 100;
+    let current = 0;
+    
+    const updateCounter = () => {
+      if (current < target) {
+        current += increment;
+        counter.textContent = Math.ceil(current);
+        setTimeout(updateCounter, 20);
+      } else {
+        counter.textContent = target;
+      }
+    };
+    
+    updateCounter();
+  });
+}
+
+// Trigger counter animation when stats section is in viewport
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateCounters();
+      observer.unobserve(entry.target);
+    }
+  });
+});
+
+const statsSection = document.querySelector('.stats-section');
+if (statsSection) {
+  observer.observe(statsSection);
+}
+
+// Form submission
+document.querySelector('form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  // Show success message
+  const button = this.querySelector('button[type="submit"]');
+  const originalText = button.innerHTML;
+  
+  button.innerHTML = '<i class="fas fa-check me-2"></i>Mensaje Enviado';
+  button.disabled = true;
+  
+  setTimeout(() => {
+    button.innerHTML = originalText;
+    button.disabled = false;
+    this.reset();
+  }, 3000);
+});
+
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
+

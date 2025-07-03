@@ -8,7 +8,7 @@
 </head>
 
 <body>
-	<div th:replace="compartido/navbar :: navbar"></div>
+	<div th:insert="~{compartido/navbar :: navbar}"></div>
 	<div class="container py-5 mt-5">
 		<h1 class="text-center mb-4">Reservar en <span th:text="${hotel.nombre}">Nombre Hotel</span></h1>
 
@@ -17,6 +17,11 @@
 			<p th:text="${hotel.direccion}">Dirección del hotel</p>
 		</div>
 
+		<!-- Mensaje general de error -->
+		<div th:if="${error}" class="alert alert-danger" role="alert">
+		  <span th:text="${error}"></span>
+		</div>
+		
 		<form method="post" th:action="@{'/reserva/hoteles/' + ${hotel.id} + '/reservar'}" th:object="${reserva}">
 
 			<!-- Enviar el hotel.id oculto -->
@@ -29,18 +34,21 @@
 					<div class="col-md-6">
 						<label class="form-label">Nombre completo</label>
 						<input type="text" class="form-control" th:field="*{cliente.nombre}" required />
+						<div th:if="${#fields.hasErrors('cliente.nombre')}" th:errors="*{cliente.nombre}" class="text-danger"></div>
 					</div>
 					<div class="col-md-6">
-						<label class="form-label">DNI</label>
-						<input type="text" class="form-control" th:field="*{cliente.dni}" required />
+					    <label class="form-label">DNI</label>
+					    <input type="text" class="form-control" th:field="*{cliente.dni}" required />
+					    <div th:if="${#fields.hasErrors('cliente.dni')}" th:errors="*{cliente.dni}" class="text-danger"></div>
 					</div>
 					<div class="col-md-6">
 						<label class="form-label">Correo electrónico</label>
 						<input type="email" class="form-control" th:field="*{cliente.email}" required />
 					</div>
 					<div class="col-md-6">
-						<label class="form-label">Teléfono</label>
-						<input type="tel" class="form-control" th:field="*{cliente.telefono}" required />
+					    <label class="form-label">Teléfono</label>
+					    <input type="tel" class="form-control" th:field="*{cliente.telefono}" required />
+					    <div th:if="${#fields.hasErrors('cliente.telefono')}" th:errors="*{cliente.telefono}" class="text-danger"></div>
 					</div>
 				</div>
 			</div>
@@ -87,8 +95,6 @@
 			<!-- Botones -->
 			<div class="text-center">
 				<button type="submit" class="btn btn-success">Reservar</button>
-				<button type="button" class="btn btn-secondary" onclick="verificarEstado()">Verificar Estado de
-					Habitaciones</button>
 			</div>
 		</form>
 	</div>

@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.Valid;
 
 @Entity
 public class Reserva {
@@ -25,6 +26,7 @@ public class Reserva {
     private double total;
     private String estado; // EJ: CONFIRMADA, CANCELADA
 
+    @Valid
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Reservas Hotel</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px 0;
+        }
+        .register-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(10px);
+        }
+        .register-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem 1.5rem 1.5rem;
+            text-align: center;
+        }
+        .register-header h2 {
+            margin: 0;
+            font-weight: 300;
+            font-size: 1.8rem;
+        }
+        .register-header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        .register-body {
+            padding: 2rem 1.5rem;
+        }
+        .form-floating {
+            margin-bottom: 1rem;
+        }
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            height: 58px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+        .invalid-feedback {
+            display: block;
+            margin-top: 0.25rem;
+            font-size: 0.875rem;
+        }
+        .btn-register {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 1rem;
+        }
+        .password-requirements {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+        .password-requirements ul {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-header">
+            <i class="fas fa-user-plus fa-2x mb-2"></i>
+            <h2>Crear Cuenta</h2>
+            <p>Únete a nuestro sistema de reservas</p>
+        </div>
+        
+        <div class="register-body">
+            <!-- Mensajes de error -->
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            
+            <form th:action="@{/auth/register}" th:object="${usuario}" method="post" id="registerForm">
+                <div class="form-floating">
+                    <input type="text" class="form-control" th:field="*{nombre}" 
+                           th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid' : ''"
+                           id="nombre" placeholder="Nombre completo" required>
+                    <label for="nombre">
+                        <i class="fas fa-user me-2"></i>Nombre completo
+                    </label>
+                    <div th:if="${#fields.hasErrors('nombre')}" class="invalid-feedback">
+                        <span th:errors="*{nombre}"></span>
+                    </div>
+                </div>
+                
+                <div class="form-floating">
+                    <input type="email" class="form-control" th:field="*{email}" 
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                           id="email" placeholder="correo@ejemplo.com" required>
+                    <label for="email">
+                        <i class="fas fa-envelope me-2"></i>Correo electrónico
+                    </label>
+                    <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback">
+                        <span th:errors="*{email}"></span>
+                    </div>
+                </div>
+                
+                <div class="form-floating">
+                    <input type="tel" class="form-control" th:field="*{telefono}" 
+                           th:classappend="${#fields.hasErrors('telefono')} ? 'is-invalid' : ''"
+                           id="telefono" placeholder="Teléfono">
+                    <label for="telefono">
+                        <i class="fas fa-phone me-2"></i>Teléfono (opcional)
+                    </label>
+                    <div th:if="${#fields.hasErrors('telefono')}" class="invalid-feedback">
+                        <span th:errors="*{telefono}"></span>
+                    </div>
+                </div>
+                
+                <div class="form-floating">
+                    <input type="password" class="form-control" th:field="*{password}" 
+                           th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                           id="password" placeholder="Contraseña" required minlength="6">
+                    <label for="password">
+                        <i class="fas fa-lock me-2"></i>Contraseña
+                    </label>
+                    <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
+                        <span th:errors="*{password}"></span>
+                    </div>
+                </div>
+                
+                <div class="form-floating">
+                    <input type="password" class="form-control" name="confirmarPassword" 
+                           id="confirmarPassword" placeholder="Confirmar contraseña" required minlength="6">
+                    <label for="confirmarPassword">
+                        <i class="fas fa-lock me-2"></i>Confirmar contraseña
+                    </label>
+                    <div id="passwordMismatch" class="invalid-feedback" style="display: none;">
+                        Las contraseñas no coinciden
+                    </div>
+                </div>
+                
+                <div class="password-requirements">
+                    <strong><i class="fas fa-info-circle me-1"></i>Requisitos de contraseña:</strong>
+                    <ul>
+                        <li>Mínimo 6 caracteres</li>
+                        <li>Se recomienda incluir mayúsculas, minúsculas y números</li>
+                    </ul>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-register w-100 mt-3">
+                    <i class="fas fa-user-plus me-2"></i>Crear Cuenta
+                </button>
+            </form>
+            
+            <div class="login-link">
+                <p class="mb-0">¿Ya tienes cuenta? 
+                    <a th:href="@{/auth/login}">
+                        <i class="fas fa-sign-in-alt me-1"></i>Inicia sesión aquí
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Validar que las contraseñas coincidan
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmarPassword = document.getElementById('confirmarPassword').value;
+            const passwordMismatch = document.getElementById('passwordMismatch');
+            const confirmarPasswordField = document.getElementById('confirmarPassword');
+            
+            if (password !== confirmarPassword) {
+                e.preventDefault();
+                confirmarPasswordField.classList.add('is-invalid');
+                passwordMismatch.style.display = 'block';
+            } else {
+                confirmarPasswordField.classList.remove('is-invalid');
+                passwordMismatch.style.display = 'none';
+            }
+        });
+        
+        // Validación en tiempo real
+        document.getElementById('confirmarPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmarPassword = this.value;
+            const passwordMismatch = document.getElementById('passwordMismatch');
+            
+            if (password !== confirmarPassword && confirmarPassword.length > 0) {
+                this.classList.add('is-invalid');
+                passwordMismatch.style.display = 'block';
+            } else {
+                this.classList.remove('is-invalid');
+                passwordMismatch.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -3,32 +3,332 @@
 <head>
     <title>Escoge un Departamento</title>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #4facfe;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --border-color: #e0e6ed;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0 60px;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: -40px auto 0;
+            position: relative;
+            z-index: 10;
+            max-width: 600px;
+        }
+
+        .search-input {
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            outline: none;
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }
+
+        /* Message Alert */
+        .custom-alert {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Department Cards */
+        .department-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            height: 100%;
+            margin-bottom: 2rem;
+        }
+
+        .department-card:hover {
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-image {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .card-description {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .view-hotels-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .view-hotels-btn:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Back Button */
+        .back-section {
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 5rem 0;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .search-section {
+                margin: -30px 15px 0;
+                padding: 1.5rem;
+            }
+            
+            .card-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-	<div th:replace="compartido/navbar :: navbar"></div>
-    <div class="container py-4 mt-5">
-        <h1 class="text-center mb-5">Escoge un Departamento</h1>
+    <!-- Navbar (Thymeleaf fragment) -->
+    <div th:replace="compartido/navbar :: navbar"></div>
 
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="hero-title">
+                    <i class="fas fa-map-marked-alt me-3"></i>
+                    Escoge tu Destino
+                </h1>
+                <p class="hero-subtitle">Descubre los mejores departamentos y encuentra el hotel perfecto para tu estadía</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <div class="container">
+        <div class="search-section">
+            <form method="get" action="#" class="search-form">
+                <div class="input-group">
+                    <input type="text" name="nombre" class="form-control search-input" 
+                           placeholder="🔍 Buscar departamento por nombre..." 
+                           aria-label="Buscar departamento">
+                    <button class="btn search-btn" type="submit">
+                        <i class="fas fa-search me-2"></i>Buscar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <!-- Message Alert -->
+        <div th:if="${mensaje}" class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <div class="alert custom-alert" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <span th:text="${mensaje}">Mensaje del sistema</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Cards -->
         <div class="row">
-            <div class="col-md-4 mb-4" th:each="dpto : ${departamentos}">
-                <div class="card h-100 shadow-sm">
-                    <img class="card-img-top"
-                         th:src="@{'/images/' + ${#strings.toLowerCase(dpto.nombre)} + '.jpg'}"
-                         th:alt="${dpto.nombre}" style="height: 200px; object-fit: cover;">
-                    <div class="card-body d-flex flex-column">
+            <div class="col-lg-4 col-md-6 mb-4" th:each="dpto : ${departamentos}">
+                <div class="department-card">
+                    <div class="card-image">
+                        <img th:src="@{'/images/' + ${#strings.toLowerCase(dpto.nombre)} + '.jpg'}"
+                             th:alt="${dpto.nombre}"
+                             onerror="this.src='https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    </div>
+                    <div class="card-content">
                         <h5 class="card-title" th:text="${dpto.nombre}">Nombre del departamento</h5>
-                        <p class="card-text" th:text="${dpto.detalle ?: 'Sin descripción'}">Detalles del departamento</p>
-                        <a th:href="@{/reserva/hoteles(depId=${dpto.id})}" class="btn btn-primary mt-auto">Ver Hoteles</a>
+                        <p class="card-description" th:text="${dpto.detalle ?: 'Descubre este increíble destino con paisajes únicos y experiencias inolvidables que te cautivarán desde el primer momento.'}">
+                            Descripción del departamento
+                        </p>
+                        <a th:href="@{/reserva/hoteles(depId=${dpto.id})}" class="view-hotels-btn">
+                            <i class="fas fa-hotel"></i>
+                            Ver Hoteles
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Empty State -->
+        <div th:if="${#lists.isEmpty(departamentos)}" class="empty-state">
+            <div>
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 class="text-muted mb-3">No se encontraron departamentos</h3>
+            <p class="text-muted">Intenta con otros términos de búsqueda o explora todos nuestros destinos.</p>
+        </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" 
-            integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" 
+    <!-- Back Button Section -->
+    <div class="back-section">
+        <a th:href="@{/}" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Regresar al Inicio
+        </a>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
             crossorigin="anonymous"></script>
 </body>
 </html>

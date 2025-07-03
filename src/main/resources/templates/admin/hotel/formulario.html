@@ -8,8 +8,9 @@
 
 	<!-- Script Thymeleaf para contador inicial -->
 	<script th:inline="javascript">
-		let contadorHabitaciones = [[${(hotel.habitaciones != null) ? hotel.habitaciones.size() : 0}]];
+		let contadorHabitaciones = /*[[${(hotel.habitaciones != null) ? hotel.habitaciones.size() : 0}]]*/ 0;
 	</script>
+
 
 	<script>
 		function agregarHabitacion() {

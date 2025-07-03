@@ -15,4 +15,6 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     @Query("SELECT r FROM Reserva r WHERE r.fechaInicio <= :fechaFin AND r.fechaFin >= :fechaInicio")
     List<Reserva> findReservasEnRango(@Param("fechaInicio") LocalDate fechaInicio,
                                       @Param("fechaFin") LocalDate fechaFin);
+    
+    List<Reserva> findByFechaReservaBetween(LocalDate inicio, LocalDate fin);
 }

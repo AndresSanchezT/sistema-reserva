@@ -2,151 +2,589 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>Bienvenido - Sistema de Reservas</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bienvenido - Sistema de Reservas</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<!-- Bootstrap 5 CDN -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <!-- Bootstrap 5 CDN (versión más reciente) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons (una sola versión) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Google Fonts (optimizado) -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- AOS Animation Library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
+    <!-- Estilos personalizados del footer (debe ir AL FINAL) -->
+    <link rel="stylesheet" href="css/footer-styles.css">
+
+	<!-- Estilos personalizados -->
 	<style>
+		:root {
+			--primary-dark: #1a1a2e;
+			--secondary-dark: #16213e;
+			--accent-gold: #d4af37;
+			--accent-gold-light: #f4e4a1;
+			--text-light: #e8e9ea;
+			--text-muted: #b0b3b8;
+			--card-bg: #2c2c54;
+			--gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			--gradient-gold: linear-gradient(135deg, #d4af37 0%, #f4e4a1 100%);
+			--shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.3);
+			--shadow-gold: 0 8px 32px rgba(212, 175, 55, 0.2);
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			background: var(--primary-dark);
+			background-image: 
+				radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+				radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+				radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.15) 0%, transparent 50%);
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+			color: var(--text-light);
+			min-height: 100vh;
+		}
+
+		/* Scrollbar personalizado */
+		::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		::-webkit-scrollbar-track {
+			background: var(--primary-dark);
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: var(--accent-gold);
+			border-radius: 4px;
+		}
+
+		::-webkit-scrollbar-thumb:hover {
+			background: var(--accent-gold-light);
+		}
+
+		/* Animaciones principales */
+		main {
+			animation: fadeInUp 1s ease-out;
+		}
+
+		@keyframes fadeInUp {
+			from {
+				opacity: 0;
+				transform: translateY(30px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@keyframes shimmer {
+			0% { background-position: -200% 0; }
+			100% { background-position: 200% 0; }
+		}
+
+		/* Carrusel mejorado */
+		.carousel {
+			border-radius: 20px;
+			overflow: hidden;
+			box-shadow: var(--shadow-dark);
+			position: relative;
+		}
+
+		.carousel::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: linear-gradient(45deg, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+			z-index: 1;
+			pointer-events: none;
+		}
+
+		.carousel-item img {
+			height: 500px;
+			object-fit: cover;
+			filter: brightness(0.85) contrast(1.1);
+			transition: all 0.3s ease;
+		}
+
+		.carousel-item.active img {
+			filter: brightness(0.9) contrast(1.2);
+		}
+
+		.carousel-control-prev,
+		.carousel-control-next {
+			width: 80px;
+			background: rgba(26, 26, 46, 0.7);
+			backdrop-filter: blur(10px);
+			border-radius: 0 15px 15px 0;
+			transition: all 0.3s ease;
+		}
+
+		.carousel-control-next {
+			border-radius: 15px 0 0 15px;
+		}
+
+		.carousel-control-prev:hover,
+		.carousel-control-next:hover {
+			background: rgba(212, 175, 55, 0.3);
+		}
+
+		/* Tarjetas de misión, visión y valores */
+		.mission-card {
+			background: var(--card-bg);
+			background-image: linear-gradient(135deg, var(--card-bg) 0%, rgba(103, 126, 234, 0.1) 100%);
+			border: 1px solid rgba(212, 175, 55, 0.2);
+			border-radius: 20px;
+			padding: 2rem;
+			height: 100%;
+			transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.mission-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -100%;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+			transition: left 0.6s;
+		}
+
+		.mission-card:hover::before {
+			left: 100%;
+		}
+
+		.mission-card:hover {
+			transform: translateY(-10px) scale(1.02);
+			box-shadow: var(--shadow-gold);
+			border-color: var(--accent-gold);
+		}
+
+		.mission-card .card-title {
+			font-family: 'Playfair Display', serif;
+			font-weight: 600;
+			font-size: 1.5rem;
+			color: var(--accent-gold);
+			margin-bottom: 1rem;
+			position: relative;
+		}
+
+		.mission-card .card-title::after {
+			content: '';
+			position: absolute;
+			bottom: -8px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 60px;
+			height: 3px;
+			background: var(--gradient-gold);
+			border-radius: 2px;
+		}
+
+		.mission-card .card-text {
+			color: var(--text-muted);
+			line-height: 1.6;
+			font-size: 1rem;
+		}
+
+		/* Galería mejorada */
+		.gallery-section h2 {
+			font-family: 'Playfair Display', serif;
+			color: var(--accent-gold);
+			font-size: 2.5rem;
+			font-weight: 700;
+			text-align: center;
+			margin-bottom: 3rem;
+			position: relative;
+		}
+
+		.gallery-section h2::after {
+			content: '';
+			position: absolute;
+			bottom: -15px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 100px;
+			height: 4px;
+			background: var(--gradient-gold);
+			border-radius: 2px;
+		}
+
+		.gallery-card {
+			background: var(--card-bg);
+			border: 1px solid rgba(212, 175, 55, 0.15);
+			border-radius: 15px;
+			overflow: hidden;
+			transition: all 0.3s ease;
+			position: relative;
+		}
+
+		.gallery-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: linear-gradient(45deg, transparent 0%, rgba(212, 175, 55, 0.1) 50%, transparent 100%);
+			opacity: 0;
+			transition: opacity 0.3s ease;
+			z-index: 1;
+		}
+
+		.gallery-card:hover::before {
+			opacity: 1;
+		}
+
+		.gallery-card:hover {
+			transform: translateY(-8px) rotate(1deg);
+			box-shadow: var(--shadow-gold);
+			border-color: var(--accent-gold);
+		}
+
 		.galeria-img {
 			width: 100%;
-			height: 200px;
+			height: 250px;
 			object-fit: cover;
+			transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+			filter: brightness(0.8) saturate(1.1);
+		}
+
+		.gallery-card:hover .galeria-img {
+			transform: scale(1.1);
+			filter: brightness(1) saturate(1.3);
+		}
+
+		/* Botón de reserva premium */
+		.btn-reserve {
+			background: var(--gradient-gold);
+			border: none;
+			border-radius: 50px;
+			padding: 18px 40px;
+			font-size: 1.2rem;
+			font-weight: 600;
+			color: var(--primary-dark);
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			position: relative;
+			overflow: hidden;
+			transition: all 0.3s ease;
+			box-shadow: var(--shadow-gold);
+		}
+
+		.btn-reserve::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -100%;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+			transition: left 0.6s;
+		}
+
+		.btn-reserve:hover::before {
+			left: 100%;
+		}
+
+		.btn-reserve:hover {
+			transform: translateY(-3px) scale(1.05);
+			box-shadow: 0 12px 40px rgba(212, 175, 55, 0.4);
+			color: var(--primary-dark);
+		}
+
+		.btn-reserve:active {
+			transform: translateY(-1px) scale(1.02);
+		}
+
+		/* Efectos de partículas de fondo */
+		.floating-particles {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: -1;
+		}
+
+		.particle {
+			position: absolute;
+			background: rgba(212, 175, 55, 0.1);
+			border-radius: 50%;
+			animation: float 15s infinite linear;
+		}
+
+		@keyframes float {
+			0% {
+				transform: translateY(100vh) rotate(0deg);
+				opacity: 0;
+			}
+			10% {
+				opacity: 1;
+			}
+			90% {
+				opacity: 1;
+			}
+			100% {
+				transform: translateY(-10vh) rotate(360deg);
+				opacity: 0;
+			}
+		}
+
+		/* Responsive improvements */
+		@media (max-width: 768px) {
+			.carousel-item img {
+				height: 300px;
+			}
+			
+			.gallery-section h2 {
+				font-size: 2rem;
+			}
+			
+			.btn-reserve {
+				padding: 15px 30px;
+				font-size: 1rem;
+			}
+		}
+
+		/* Loading shimmer effect */
+		.shimmer {
+			background: linear-gradient(90deg, var(--card-bg) 25%, rgba(212, 175, 55, 0.1) 50%, var(--card-bg) 75%);
+			background-size: 200% 100%;
+			animation: shimmer 2s infinite;
 		}
 	</style>
 </head>
 
 <body>
+	<!-- Partículas flotantes de fondo -->
+	<div class="floating-particles" id="particles"></div>
 
 	<!-- NAVBAR -->
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="#">Reservas Hoteles</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav ms-auto">
-					<li class="nav-item">
-						<a class="nav-link active" href="#">Inicio</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{reserva/departamentos}">Reservar</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Contacto</a>
-					</li>
-
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMantenimiento" role="button"
-							data-bs-toggle="dropdown" aria-expanded="false">
-							Mantenimiento
-						</a>
-						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMantenimiento">
-							<li><a class="dropdown-item" th:href="@{/admin/reservas}">Reservas</a></li>
-							<li><a class="dropdown-item" th:href="@{/admin/seleccionar_departamento}">Hoteles</a></li>
-							<li><a class="dropdown-item" th:href="@{/admin/departamentos}">Departamentos</a></li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<div th:replace="compartido/navbar :: navbar"></div>
 
 	<!-- Contenido Principal -->
-	<main class="container pt-4" style="margin-top: 50px;">
+	<main class="container pt-4" style="margin-top: 80px;">
 
-		<!-- Carrusel de imágenes -->
-		<section class="mb-5">
-			<div id="carruselPrincipal" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+		<!-- Carrusel de imágenes mejorado -->
+		<section class="mb-5" data-aos="fade-up">
+			<div id="carruselPrincipal" class="carousel slide" data-bs-ride="carousel" data-bs-interval="1700">
+				<div class="carousel-indicators">
+					<button type="button" data-bs-target="#carruselPrincipal" data-bs-slide-to="0" class="active"></button>
+					<button type="button" data-bs-target="#carruselPrincipal" data-bs-slide-to="1"></button>
+					<button type="button" data-bs-target="#carruselPrincipal" data-bs-slide-to="2"></button>
+				</div>
 				<div class="carousel-inner">
 					<div class="carousel-item active">
-						<img src="/images/1.jpg" class="d-block w-100" style="height: 400px; object-fit: cover;"
-							alt="Imagen 1">
+						<img src="/images/navar/nav1.jpg" class="d-block w-100" alt="Luxury Hotel Suite">
+						<div class="carousel-caption d-none d-md-block">
+							<h5 class="animate__animated animate__fadeInUp">Experiencia de Lujo</h5>
+							<p class="animate__animated animate__fadeInUp animate__delay-1s">Suites elegantes con vistas espectaculares</p>
+						</div>
 					</div>
 					<div class="carousel-item">
-						<img src="/images/2.jpg" class="d-block w-100" style="height: 400px; object-fit: cover;"
-							alt="Imagen 2">
+						<img src="/images/navar/nav2.jpg" class="d-block w-100" alt="Hotel Amenities">
+						<div class="carousel-caption d-none d-md-block">
+							<h5 class="animate__animated animate__fadeInUp">Amenidades Premium</h5>
+							<p class="animate__animated animate__fadeInUp animate__delay-1s">Servicios de clase mundial para su comodidad</p>
+						</div>
 					</div>
 					<div class="carousel-item">
-						<img src="/images/3.jpg" class="d-block w-100" style="height: 400px; object-fit: cover;"
-							alt="Imagen 3">
+						<img src="/images/navar/nav3.jpg" class="d-block w-100" alt="Hotel Restaurant">
+						<div class="carousel-caption d-none d-md-block">
+							<h5 class="animate__animated animate__fadeInUp">Gastronomía Excepcional</h5>
+							<p class="animate__animated animate__fadeInUp animate__delay-1s">Experiencias culinarias inolvidables</p>
+						</div>
 					</div>
+
 				</div>
-				<button class="carousel-control-prev" type="button" data-bs-target="#carruselPrincipal"
-					data-bs-slide="prev">
+				<button class="carousel-control-prev" type="button" data-bs-target="#carruselPrincipal" data-bs-slide="prev">
 					<span class="carousel-control-prev-icon"></span>
 					<span class="visually-hidden">Anterior</span>
 				</button>
-				<button class="carousel-control-next" type="button" data-bs-target="#carruselPrincipal"
-					data-bs-slide="next">
+				<button class="carousel-control-next" type="button" data-bs-target="#carruselPrincipal" data-bs-slide="next">
 					<span class="carousel-control-next-icon"></span>
 					<span class="visually-hidden">Siguiente</span>
 				</button>
 			</div>
 		</section>
 
-		<!-- Misión, Visión y Valores en tarjetas -->
+		<!-- Misión, Visión y Valores en tarjetas elegantes -->
 		<section class="mb-5">
-			<div class="row text-center">
-				<div class="col-md-4 mb-4">
-					<div class="card h-100 shadow-sm">
-						<div class="card-body">
-							<h5 class="card-title">Misión</h5>
-							<p class="card-text">Brindar comodidad y seguridad a nuestros clientes en cada viaje.</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4 mb-4">
-					<div class="card h-100 shadow-sm">
-						<div class="card-body">
-							<h5 class="card-title">Visión</h5>
-							<p class="card-text">Ser la plataforma de reservas líder en el país.</p>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4 mb-4">
-					<div class="card h-100 shadow-sm">
-						<div class="card-body">
-							<h5 class="card-title">Valores</h5>
-							<p class="card-text">Compromiso, confianza y excelencia en cada servicio brindado.</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<!-- Galería -->
-		<section class="mb-5">
-			<h2>Galería</h2>
 			<div class="row">
-				<div class="col-md-4 mb-3" th:each="i : ${#numbers.sequence(1,6)}">
-					<div class="card">
-						<img th:src="@{'/images/' + ${i} + '.jpg'}" class="galeria-img card-img-top"
-							th:alt="'Imagen ' + ${i}">
+				<div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+					<div class="mission-card">
+						<div class="text-center">
+							<i class="bi bi-bullseye fs-1 text-warning mb-3"></i>
+							<h5 class="card-title">Misión</h5>
+							<p class="card-text">Brindar experiencias de hospitalidad excepcionales que superen las expectativas de nuestros huéspedes, ofreciendo comodidad, elegancia y un servicio personalizado de clase mundial.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+					<div class="mission-card">
+						<div class="text-center">
+							<i class="bi bi-eye fs-1 text-warning mb-3"></i>
+							<h5 class="card-title">Visión</h5>
+							<p class="card-text">Ser reconocidos como la plataforma de reservas hoteleras líder en la región, estableciendo nuevos estándares de excelencia en la industria de la hospitalidad y el turismo.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+					<div class="mission-card">
+						<div class="text-center">
+							<i class="bi bi-gem fs-1 text-warning mb-3"></i>
+							<h5 class="card-title">Valores</h5>
+							<p class="card-text">Excelencia en el servicio, integridad en cada interacción, innovación constante y compromiso inquebrantable con la satisfacción y bienestar de nuestros clientes.</p>
+						</div>
 					</div>
 				</div>
 			</div>
 		</section>
 
-		<div class="text-center">
-			<a class="btn btn-primary btn-lg" th:href="@{reserva/departamentos}">Reservar Hotel</a>
+		<!-- Galería mejorada -->
+		<section class="mb-5 gallery-section">
+			<h2 data-aos="fade-up">Galería de Experiencias</h2>
+			<div class="row">
+				<div class="col-md-4 mb-4" th:each="i : ${#numbers.sequence(1,6)}" data-aos="zoom-in" th:data-aos-delay="${100 * i}">
+					<div class="gallery-card">
+						<img th:src="@{'/images/' + ${i} + '.jpg'}" class="galeria-img" th:alt="'Experiencia Premium ' + ${i}">
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Botón Reservar Premium -->
+		<div class="text-center mb-5" data-aos="fade-up" data-aos-delay="500">
+			<a class="btn btn-reserve" th:href="@{/reserva/departamentos}">
+				<i class="bi bi-calendar-check me-2"></i>
+				<span>Reservar Ahora</span>
+			</a>
+			<div class="mt-3">
+				<small class="text-muted">✨ Reserva con confianza • Cancelación gratuita • Mejor precio garantizado</small>
+			</div>
 		</div>
 
 	</main>
-
-	<!-- Footer -->
-	<footer class="bg-dark text-white text-center py-3 mt-5">
-		<p class="mb-0">&copy; 2025 Sistema de Reservas de Hoteles</p>
-	</footer>
+	<!-- NAVBAR -->
+		<div th:replace="compartido/footer :: footer"></div>
 
 	<!-- Bootstrap JS -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
-		crossorigin="anonymous"></script>
+		integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+
+	<!-- AOS Animation JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+	<!-- Script personalizado -->
+	<script>
+		// Inicializar AOS
+		AOS.init({
+			duration: 800,
+			easing: 'ease-in-out',
+			once: true,
+			mirror: false
+		});
+
+		// Crear partículas flotantes
+		function createParticles() {
+			const particlesContainer = document.getElementById('particles');
+			const particleCount = 15;
+
+			for (let i = 0; i < particleCount; i++) {
+				const particle = document.createElement('div');
+				particle.className = 'particle';
+				
+				// Tamaño aleatorio
+				const size = Math.random() * 4 + 2;
+				particle.style.width = size + 'px';
+				particle.style.height = size + 'px';
+				
+				// Posición horizontal aleatoria
+				particle.style.left = Math.random() * 100 + '%';
+				
+				// Retraso de animación aleatorio
+				particle.style.animationDelay = Math.random() * 15 + 's';
+				
+				// Duración de animación aleatoria
+				particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+				
+				particlesContainer.appendChild(particle);
+			}
+		}
+
+		// Mejorar el carrusel con efectos adicionales
+		document.addEventListener('DOMContentLoaded', function() {
+			createParticles();
+			
+			const carousel = document.getElementById('carruselPrincipal');
+			const carouselInstance = new bootstrap.Carousel(carousel, {
+				interval: 1900,
+				wrap: true,
+				touch: true
+			});
+
+			// Añadir efecto de pausa al hover
+			carousel.addEventListener('mouseenter', () => {
+				carouselInstance.pause();
+			});
+
+			carousel.addEventListener('mouseleave', () => {
+				carouselInstance.cycle();
+			});
+
+			// Efecto de shimmer en las tarjetas mientras cargan
+			const cards = document.querySelectorAll('.mission-card, .gallery-card');
+			cards.forEach((card, index) => {
+				setTimeout(() => {
+					card.classList.remove('shimmer');
+				}, 500 + (index * 100));
+			});
+		});
+
+		// Smooth scroll para links internos
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+			anchor.addEventListener('click', function (e) {
+				e.preventDefault();
+				const target = document.querySelector(this.getAttribute('href'));
+				if (target) {
+					target.scrollIntoView({
+						behavior: 'smooth',
+						block: 'start'
+					});
+				}
+			});
+		});
+
+		// Efecto parallax sutil en el scroll
+		window.addEventListener('scroll', () => {
+			const scrolled = window.pageYOffset;
+			const parallax = document.querySelector('.carousel');
+			if (parallax) {
+				const speed = scrolled * 0.2;
+				parallax.style.transform = `translateY(${speed}px)`;
+			}
+		});
+	</script>
 </body>
 
 </html>

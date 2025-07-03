@@ -1,5 +1,6 @@
 package com.cibertec.reservashotel.controller.usuario;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,8 @@ import com.cibertec.reservashotel.services.HabitacionService;
 import com.cibertec.reservashotel.services.HotelService;
 import com.cibertec.reservashotel.services.ReservaService;
 
+import jakarta.validation.Valid;
+
 @Controller
 @RequestMapping("reserva")
 public class HotelReservaController {
@@ -46,10 +49,29 @@ public class HotelReservaController {
     private ClienteService clienteService;
     
     @GetMapping("/departamentos")
-    public String mostrarDepartamentos(Model model) {
-        model.addAttribute("departamentos", departamentService.listar());
+    public String mostrarDepartamentos(@RequestParam(required = false) String nombre, Model model) {
+        if (nombre != null && !nombre.isEmpty()) {
+            Optional<Departamento> departamento = departamentService.buscarPorNombre(nombre);
+            if (departamento.isPresent()) {
+                model.addAttribute("departamentos", List.of(departamento.get()));
+                model.addAttribute("mensaje", "Mostrando resultados para: " + nombre);
+            } else {
+                model.addAttribute("departamentos", List.of());
+                model.addAttribute("mensaje", "No se encontraron resultados para: " + nombre);
+            }
+        } else {
+            model.addAttribute("departamentos", departamentService.listar());
+        }
         return "usuario/departamentos";
     }
+
+    @GetMapping("/buscar")
+    public String buscarReservasPorDni(@RequestParam("dni") String dni, Model model) {
+        List<Reserva> reservas = reservaService.buscarReservasPorDniCliente(dni);
+        model.addAttribute("reservas", reservas);
+        return "admin/reserva/lista"; // o la ruta correcta a tu HTML actual
+    }
+    
 
     @GetMapping("/hoteles")
     public String verHotelesPorDepartamento(@RequestParam("depId") Long depId, Model model) {
@@ -60,6 +82,7 @@ public class HotelReservaController {
         model.addAttribute("hoteles", hoteles);
         return "usuario/hoteles";
     }
+
 
     @GetMapping("/hoteles/{id}/reservar")
     public String mostrarFormularioReserva(@PathVariable("id") Long hotelId, Model model) {
@@ -74,8 +97,8 @@ public class HotelReservaController {
 
         model.addAttribute("hotel", hotel);
         model.addAttribute("mapaPrecios", mapaPrecios);
-        model.addAttribute("departamento", hotel.getDepartamento());
-        model.addAttribute("habitaciones", hotel.getHabitaciones());
+        model.addAttribute("departamento", hotel != null ? hotel.getDepartamento() : null);
+        model.addAttribute("habitaciones", hotel != null ? hotel.getHabitaciones() : Collections.emptyList());
         model.addAttribute("reserva", reserva);
 
         return "usuario/reserva-form";
@@ -84,35 +107,73 @@ public class HotelReservaController {
     @PostMapping("/hoteles/{id}/reservar")
     public String procesarReserva(
             @PathVariable("id") Long hotelId,
-            @ModelAttribute Reserva reserva,
-            @RequestParam(name = "habitacionesSeleccionadas", required = false) List<Long> habitacionesSeleccionadas,
+            @Valid @ModelAttribute("reserva") Reserva reserva,
             BindingResult result,
+            @RequestParam(name = "habitacionesSeleccionadas", required = false) List<Long> habitacionesSeleccionadas,
             Model model) {
 
         Optional<Hotel> optHotel = hotelService.buscarPorId(hotelId);
         Hotel hotel = optHotel.orElse(null);
 
+        // ⚠️ Validación de campos
         if (result.hasErrors() || hotel == null) {
+            model.addAttribute("reserva", reserva); // 🔥 importante
             model.addAttribute("hotel", hotel);
             model.addAttribute("departamento", hotel != null ? hotel.getDepartamento() : null);
             model.addAttribute("habitaciones", hotel != null ? hotel.getHabitaciones() : Collections.emptyList());
+            model.addAttribute("habitacionesSeleccionadas", habitacionesSeleccionadas); // por si ya había alguna
             return "usuario/reserva-form";
         }
 
+        // ⚠️ Validación de fechas
+        LocalDate hoy = LocalDate.now();
+        LocalDate fechaInicio = reserva.getFechaInicio();
+        LocalDate fechaFin = reserva.getFechaFin();
+
+        if (fechaInicio == null || fechaFin == null || fechaInicio.isBefore(hoy) || fechaFin.isBefore(hoy) || fechaInicio.isAfter(fechaFin)) {
+            model.addAttribute("error", "Las fechas seleccionadas no son válidas.");
+            model.addAttribute("reserva", reserva); // 🔥 importante
+            model.addAttribute("hotel", hotel);
+            model.addAttribute("departamento", hotel.getDepartamento());
+            model.addAttribute("habitaciones", hotel.getHabitaciones());
+            model.addAttribute("habitacionesSeleccionadas", habitacionesSeleccionadas);
+            return "usuario/reserva-form";
+        }
+
+        // ⚠️ Validación de habitaciones
         if (habitacionesSeleccionadas == null || habitacionesSeleccionadas.isEmpty()) {
             model.addAttribute("error", "Debe seleccionar al menos una habitación");
+            model.addAttribute("reserva", reserva); // 🔥 importante
             model.addAttribute("hotel", hotel);
-            model.addAttribute("departamento", hotel != null ? hotel.getDepartamento() : null);
-            model.addAttribute("habitaciones", hotel != null ? hotel.getHabitaciones() : Collections.emptyList());
+            model.addAttribute("departamento", hotel.getDepartamento());
+            model.addAttribute("habitaciones", hotel.getHabitaciones());
             return "usuario/reserva-form";
         }
 
-        // Guarda el cliente y actualiza en la reserva
+        // ⚠️ Validar disponibilidad
+        List<String> noDisponibles = new ArrayList<>();
+        for (Long habId : habitacionesSeleccionadas) {
+            Habitacion hab = habitacionService.buscarPorId(habId).orElse(null);
+            if (hab != null && !habitacionService.estaDisponible(hab, fechaInicio, fechaFin)) {
+                noDisponibles.add(hab.getTipoHabitacion().getNombre());
+            }
+        }
+
+        if (!noDisponibles.isEmpty()) {
+            model.addAttribute("error", "Las siguientes habitaciones no están disponibles: " + String.join(", ", noDisponibles));
+            model.addAttribute("reserva", reserva); // 🔥 importante
+            model.addAttribute("hotel", hotel);
+            model.addAttribute("departamento", hotel.getDepartamento());
+            model.addAttribute("habitaciones", hotel.getHabitaciones());
+            model.addAttribute("habitacionesSeleccionadas", habitacionesSeleccionadas);
+            return "usuario/reserva-form";
+        }
+
+        // Guardar cliente y reserva
         Cliente clientePersistido = clienteService.guardar(reserva.getCliente());
         reserva.setCliente(clientePersistido);
-
         reserva.setHotel(hotel);
-        reserva.setFechaReserva(java.time.LocalDate.now());
+        reserva.setFechaReserva(LocalDate.now());
         reserva.setEstado("CONFIRMADA");
 
         List<DetalleReserva> detalles = new ArrayList<>();
@@ -131,18 +192,13 @@ public class HotelReservaController {
         }
 
         reserva.setDetalles(detalles);
-        reserva.setTotal(total); // Calcular el total de la reserva
-
-
+        reserva.setTotal(total);
         reserva.setId(null);
         reservaService.guardar(reserva);
 
-        return "redirect:/reserva/confirmacion";
+        return "/usuario/confirmacion";
     }
-
-    @GetMapping("/confirmacion")
-    public String mostrarConfirmacion() {
-        return "usuario/confirmacion";
-    }
+    
+  
 }
 

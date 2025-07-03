@@ -30,4 +30,8 @@ public class DepartamentoService {
 	public void eliminar(Long depId) {
 		departamentoRepository.deleteById(depId);
 	}
+	
+    public Optional<Departamento> buscarPorNombre(String nombre) {
+        return departamentoRepository.findByNombre(nombre);
+    }
 }

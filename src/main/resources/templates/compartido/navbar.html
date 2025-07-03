@@ -1,37 +1,554 @@
-<!-- templates/fragmentos/navbar.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="navbar">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Reservas Hoteles</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" th:href="@{/}">Inicio</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/reserva/departamentos}">Reservar</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contacto</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMantenimiento" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Mantenimiento
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMantenimiento">
-                        <li><a class="dropdown-item" th:href="@{/admin/reservas}">Reservas</a></li>
-                        <li><a class="dropdown-item" th:href="@{/admin/seleccionar_departamento}">Hoteles</a></li>
-                        <li><a class="dropdown-item" th:href="@{/admin/departamentos}">Departamentos</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Navbar Premium</title>
+
+	<!-- Bootstrap JS (bundle incluye Popper.js) -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Bootstrap Icons -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+	<!-- Google Fonts -->
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+		rel="stylesheet">
+
+	<!-- Estilos personalizados premium -->
+	<style>
+		:root {
+			--primary-dark: #1a1a2e;
+			--secondary-dark: #16213e;
+			--accent-gold: #d4af37;
+			--accent-gold-light: #f4e4a1;
+			--text-light: #e8e9ea;
+			--text-muted: #b0b3b8;
+			--navbar-bg: rgba(26, 26, 46, 0.95);
+			--gradient-gold: linear-gradient(135deg, #d4af37 0%, #f4e4a1 100%);
+			--shadow-premium: 0 8px 32px rgba(0, 0, 0, 0.4);
+			--glow-gold: 0 0 20px rgba(212, 175, 55, 0.3);
+		}
+
+		/* Navbar principal con glassmorphism */
+		.navbar-premium {
+			background: var(--navbar-bg);
+			backdrop-filter: blur(20px);
+			-webkit-backdrop-filter: blur(20px);
+			border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+			box-shadow: var(--shadow-premium);
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			z-index: 1030;
+		}
+
+		/* Efecto al hacer scroll */
+		.navbar-premium.scrolled {
+			background: rgba(26, 26, 46, 0.98);
+			box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+		}
+
+		/* Brand logo premium */
+		.navbar-brand-premium {
+			font-family: 'Playfair Display', serif;
+			font-weight: 700;
+			font-size: 1.6rem;
+			color: var(--accent-gold);
+			text-decoration: none;
+			position: relative;
+			padding: 0.5rem 1rem;
+			border-radius: 10px;
+			transition: all 0.3s ease;
+			background: linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.1) 100%);
+			z-index: 1;
+		}
+
+		.navbar-brand-premium::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: var(--gradient-gold);
+			opacity: 0;
+			border-radius: 10px;
+			transition: opacity 0.3s ease;
+			z-index: -1;
+		}
+
+		.navbar-brand-premium:hover {
+			color: var(--primary-dark);
+			transform: translateY(-2px);
+			box-shadow: var(--glow-gold);
+		}
+
+		.navbar-brand-premium:hover::before {
+			opacity: 1;
+		}
+
+		.navbar-brand-premium i {
+			margin-right: 0.5rem;
+			font-size: 1.4rem;
+		}
+
+		/* Toggler personalizado */
+		.navbar-toggler-premium {
+			border: 2px solid var(--accent-gold);
+			border-radius: 8px;
+			padding: 0.5rem;
+			transition: all 0.3s ease;
+		}
+
+		.navbar-toggler-premium:hover {
+			background: rgba(212, 175, 55, 0.1);
+			box-shadow: var(--glow-gold);
+		}
+
+		.navbar-toggler-premium:focus {
+			box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+		}
+
+		.navbar-toggler-icon-premium {
+			background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23d4af37' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+			width: 1.5em;
+			height: 1.5em;
+		}
+
+		/* Links de navegación premium - CORREGIDO */
+		.nav-link-premium {
+			color: var(--text-light);
+			font-weight: 500;
+			padding: 0.75rem 1.25rem;
+			margin: 0 0.25rem;
+			border-radius: 12px;
+			position: relative;
+			transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			overflow: hidden;
+			text-decoration: none;
+			z-index: 1;
+		}
+
+		/* Efecto de barrido - CORREGIDO para evitar conflictos */
+		.nav-link-premium::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -100%;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.15), transparent);
+			transition: left 0.5s ease;
+			z-index: -1;
+		}
+
+		.nav-link-premium:hover::before {
+			left: 100%;
+		}
+
+		.nav-link-premium:hover {
+			color: var(--accent-gold);
+			background: rgba(212, 175, 55, 0.1);
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+		}
+
+		.nav-link-premium i {
+			margin-right: 0.5rem;
+			transition: transform 0.3s ease;
+		}
+
+		.nav-link-premium:hover i {
+			transform: scale(1.1);
+		}
+
+		/* Dropdown premium */
+		.dropdown-toggle-premium {
+			position: relative;
+		}
+
+		.dropdown-toggle-premium::after {
+			border-top: 0.3em solid;
+			border-right: 0.3em solid transparent;
+			border-left: 0.3em solid transparent;
+			margin-left: 0.5rem;
+			transition: transform 0.3s ease;
+		}
+
+		.dropdown-toggle-premium[aria-expanded="true"]::after {
+			transform: rotate(180deg);
+		}
+
+		.dropdown-menu-premium {
+			background: rgba(44, 44, 84, 0.95);
+			backdrop-filter: blur(20px);
+			border: 1px solid rgba(212, 175, 55, 0.3);
+			border-radius: 15px;
+			box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+			padding: 0.5rem 0;
+			margin-top: 0.5rem;
+			min-width: 200px;
+		}
+
+		.dropdown-item-premium {
+			color: var(--text-light);
+			padding: 0.75rem 1.5rem;
+			transition: all 0.3s ease;
+			border-radius: 0;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.dropdown-item-premium::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 0;
+			height: 100%;
+			width: 4px;
+			background: var(--gradient-gold);
+			transform: scaleY(0);
+			transition: transform 0.3s ease;
+		}
+
+		.dropdown-item-premium:hover {
+			background: rgba(212, 175, 55, 0.1);
+			color: var(--accent-gold);
+			padding-left: 2rem;
+		}
+
+		.dropdown-item-premium:hover::before {
+			transform: scaleY(1);
+		}
+
+		/* Badge de rol premium */
+		.badge-role-premium {
+			background: var(--gradient-gold);
+			color: var(--primary-dark);
+			border-radius: 20px;
+			padding: 0.4rem 1rem;
+			font-size: 0.75rem;
+			font-weight: 600;
+			letter-spacing: 0.5px;
+			text-transform: uppercase;
+			box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.badge-role-premium::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -100%;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+			transition: left 0.8s;
+		}
+
+		.badge-role-premium:hover::before {
+			left: 100%;
+		}
+
+		/* Botón de salir especial */
+		.nav-link-logout {
+			background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(220, 53, 69, 0.2) 100%);
+			border: 1px solid rgba(220, 53, 69, 0.3);
+			color: #ff6b7a;
+		}
+
+		.nav-link-logout:hover {
+			background: rgba(220, 53, 69, 0.2);
+			color: #fff;
+			border-color: #dc3545;
+			box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+		}
+
+		/* Animaciones de entrada */
+		@keyframes slideInDown {
+			from {
+				transform: translateY(-100%);
+				opacity: 0;
+			}
+
+			to {
+				transform: translateY(0);
+				opacity: 1;
+			}
+		}
+
+		.navbar-premium {
+			animation: slideInDown 0.8s ease-out;
+		}
+
+		/* Responsive mejorado */
+		@media (max-width: 991.98px) {
+			.navbar-collapse {
+				background: rgba(26, 26, 46, 0.98);
+				backdrop-filter: blur(20px);
+				border-radius: 15px;
+				margin-top: 1rem;
+				padding: 1rem;
+				border: 1px solid rgba(212, 175, 55, 0.2);
+			}
+
+			.nav-link-premium {
+				margin: 0.25rem 0;
+				border-radius: 8px;
+			}
+
+			.dropdown-menu-premium {
+				background: rgba(44, 44, 84, 0.98);
+				margin-left: 1rem;
+				margin-top: 0.5rem;
+			}
+		}
+
+		/* Efectos de hover avanzados - CORREGIDO */
+		.nav-item-premium {
+			position: relative;
+		}
+
+		/* Indicador de línea inferior - separado del efecto de barrido */
+		.nav-item-premium::after {
+			content: '';
+			position: absolute;
+			bottom: -2px;
+			left: 50%;
+			transform: translateX(-50%) scaleX(0);
+			width: 80%;
+			height: 2px;
+			background: var(--gradient-gold);
+			transition: transform 0.3s ease;
+			z-index: 2;
+		}
+
+		.nav-item-premium:hover::after {
+			transform: translateX(-50%) scaleX(1);
+		}
+
+		/* Indicador activo */
+		.nav-link-premium.active {
+			background: rgba(212, 175, 55, 0.15);
+			color: var(--accent-gold);
+			box-shadow: inset 0 0 10px rgba(212, 175, 55, 0.2);
+		}
+
+		/* Mejoras de accesibilidad */
+		.nav-link-premium:focus {
+			outline: 2px solid var(--accent-gold);
+			outline-offset: 2px;
+		}
+
+		/* Loading shimmer effect */
+		@keyframes shimmer {
+			0% {
+				background-position: -200% 0;
+			}
+
+			100% {
+				background-position: 200% 0;
+			}
+		}
+
+		.shimmer-effect {
+			background: linear-gradient(90deg, transparent 25%, rgba(212, 175, 55, 0.1) 50%, transparent 75%);
+			background-size: 200% 100%;
+			animation: shimmer 2s infinite;
+		}
+	</style>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-premium fixed-top" th:fragment="navbar">
+		<div class="container-fluid">
+			<!-- Brand Premium -->
+			<a class="navbar-brand-premium" th:href="@{/}">
+				<i class="bi bi-building-check"></i>Hotel LuxeStay
+			</a>
+
+			<!-- Toggler Premium -->
+			<button class="navbar-toggler navbar-toggler-premium" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon-premium"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav ms-auto align-items-center">
+
+					<!-- Inicio -->
+					<li class="nav-item nav-item-premium">
+						<a class="nav-link nav-link-premium" th:href="@{/}">
+							<i class="bi bi-house-heart-fill"></i>Inicio
+						</a>
+					</li>
+
+					<!-- Usuario: Reservar -->
+					<li class="nav-item nav-item-premium" sec:authorize="hasRole('USER')">
+						<a class="nav-link nav-link-premium" th:href="@{/reserva/departamentos}">
+							<i class="bi bi-calendar-check-fill"></i>Reservar
+						</a>
+					</li>
+
+					<!-- Usuario: Contacto -->
+					<li class="nav-item nav-item-premium" sec:authorize="hasRole('USER')">
+						<a class="nav-link nav-link-premium" th:href="@{/contacto}">
+							<i class="bi bi-chat-heart-fill"></i>Contacto
+						</a>
+					</li>
+
+					<!-- Admin: Reportes -->
+					<li class="nav-item dropdown nav-item-premium" sec:authorize="hasRole('ADMIN')">
+						<a class="nav-link nav-link-premium dropdown-toggle dropdown-toggle-premium" href="#"
+							data-bs-toggle="dropdown" id="navbarDropdownReportes" role="button" aria-expanded="false">
+							<i class="bi bi-bar-chart-fill"></i>Reportes
+						</a>
+						<ul class="dropdown-menu dropdown-menu-premium dropdown-menu-end"
+							aria-labelledby="navbarDropdownReportes">
+							<li>
+								<a class="dropdown-item dropdown-item-premium" href="#" data-bs-toggle="modal"
+									data-bs-target="#modalFechas">
+									<i class="bi bi-calendar-range me-2"></i>Reservas entre fechas
+								</a>
+							</li>
+							<li>
+								<a class="dropdown-item dropdown-item-premium" th:href="@{/admin/reportes/historial}"
+									target="_blank">
+									<i class="bi bi-building me-2"></i>Historial de Reservas
+								</a>
+							</li>
+						</ul>
+					</li>
+
+					<!-- Admin: Mantenimiento -->
+					<li class="nav-item dropdown nav-item-premium" sec:authorize="hasRole('ADMIN')">
+						<a class="nav-link nav-link-premium dropdown-toggle dropdown-toggle-premium" href="#"
+							id="navbarDropdownMantenimiento" role="button" data-bs-toggle="dropdown"
+							aria-expanded="false">
+							<i class="bi bi-gear-wide-connected"></i>Panel Administrativo
+						</a>
+						<ul class="dropdown-menu dropdown-menu-premium dropdown-menu-end"
+							aria-labelledby="navbarDropdownMantenimiento">
+							<li><a class="dropdown-item dropdown-item-premium" th:href="@{/admin/reservas}">
+									<i class="bi bi-journal-bookmark me-2"></i>Gestión de Reservas
+								</a></li>
+							<li><a class="dropdown-item dropdown-item-premium"
+									th:href="@{/admin/seleccionar_departamento}">
+									<i class="bi bi-building me-2"></i>Administrar Hoteles
+								</a></li>
+							<li><a class="dropdown-item dropdown-item-premium" th:href="@{/admin/departamentos}">
+									<i class="bi bi-door-open me-2"></i>Gestión de Departamentos
+								</a></li>
+						</ul>
+					</li>
+
+					<!-- Rol Premium Badge -->
+					<li class="nav-item" sec:authorize="isAuthenticated()">
+						<span class="nav-link">
+							<span class="badge-role-premium">
+								<i class="bi bi-person-check-fill me-1"></i>
+								<span sec:authorize="hasRole('ADMIN')">ADMINISTRADOR</span>
+								<span sec:authorize="hasRole('USER')">HUÉSPED VIP</span>
+							</span>
+						</span>
+					</li>
+
+					<!-- Cerrar sesión Premium -->
+					<li class="nav-item nav-item-premium" sec:authorize="isAuthenticated()">
+						<a class="nav-link nav-link-premium nav-link-logout" th:href="@{/auth/logout}">
+							<i class="bi bi-box-arrow-right"></i>Cerrar Sesión
+						</a>
+					</li>
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Modal para seleccionar fechas -->
+	<div class="modal fade" id="modalFechas" tabindex="-1" aria-labelledby="modalFechasLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content border-0">
+				<div class="modal-header bg-dark text-white">
+					<h5 class="modal-title" id="modalFechasLabel">
+						<i class="bi bi-calendar-range me-2"></i>Reporte entre Fechas
+					</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+						aria-label="Cerrar"></button>
+				</div>
+				<form th:action="@{/admin/reportes/reservas}" method="get" target="_blank">
+					<div class="modal-body">
+						<div class="mb-3">
+							<label for="fechaDesde" class="form-label">Desde:</label>
+							<input type="date" class="form-control" id="fechaDesde" name="desde" required>
+						</div>
+						<div class="mb-3">
+							<label for="fechaHasta" class="form-label">Hasta:</label>
+							<input type="date" class="form-control" id="fechaHasta" name="hasta" required>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-outline-primary">
+							<i class="bi bi-file-earmark-pdf me-1"></i>Ver Reporte
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Scripts adicionales -->
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const navbar = document.querySelector('.navbar-premium');
+
+			// Efecto de scroll en el navbar
+			window.addEventListener('scroll', function () {
+				if (window.scrollY > 50) {
+					navbar.classList.add('scrolled');
+				} else {
+					navbar.classList.remove('scrolled');
+				}
+			});
+
+			// Cerrar dropdown al hacer clic fuera
+			document.addEventListener('click', function (event) {
+				const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+				dropdowns.forEach(dropdown => {
+					if (!dropdown.contains(event.target)) {
+						const dropdownToggle = dropdown.previousElementSibling;
+						if (dropdownToggle && !dropdownToggle.contains(event.target)) {
+							bootstrap.Dropdown.getInstance(dropdownToggle)?.hide();
+						}
+					}
+				});
+			});
+
+			// Highlight del link activo
+			const currentPath = window.location.pathname;
+			const navLinks = document.querySelectorAll('.nav-link-premium');
+
+			navLinks.forEach(link => {
+				if (link.getAttribute('href') === currentPath) {
+					link.classList.add('active');
+				}
+			});
+
+			// Efecto shimmer inicial
+			setTimeout(() => {
+				document.querySelectorAll('.shimmer-effect').forEach(el => {
+					el.classList.remove('shimmer-effect');
+				});
+			}, 2000);
+		});
+	</script>
+
+	<!-- Bootstrap JS -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
 </html>

@@ -5,33 +5,27 @@
 	<meta charset="UTF-8" />
 	<title>Hoteles de [[${departamento.nombre}]]</title>
 
-	<!-- Bootstrap CSS -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" />
-	<!-- Bootstrap Icons -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
 </head>
 
 <body>
 	<div th:replace="compartido/navbar :: navbar"></div>
-	<div class="container my-5" style="padding-top: 20px;">
-		<!-- Encabezado -->
 
-		<div class="d-flex justify-content-between align-items-center">
-			<div>
-				<h2 class="mb-4">
-					Hoteles en <span th:text="${departamento.nombre}">Nombre-Depto</span>
-				</h2>
-			</div>
-			<div class="d-flex align-items-end gap-2 mb-3">
-				<input type="date" class="form-control" placeholder="Fecha inicio" style="max-width: 200px;">
-				<input type="date" class="form-control" placeholder="Fecha fin" style="max-width: 200px;">
-				<a class="btn btn-primary"style="white-space: nowrap;">habitaciones disponibles</a>
+	<div class="container my-5" style="padding-top: 20px;">
+		<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+			<h2 class="mb-0">Hoteles en <span th:text="${departamento.nombre}">Nombre-Depto</span></h2>
+			<div class="d-flex align-items-end gap-2">
+				<input type="date" id="fechaInicio" class="form-control" style="max-width: 180px;" />
+				<input type="date" id="fechaFin" class="form-control" style="max-width: 180px;" />
+				<button class="btn btn-primary" onclick="consultarDisponibilidad()"
+					style="white-space: nowrap;">Habitaciones disponibles</button>
 			</div>
 		</div>
 
 		<!-- Tabla de hoteles -->
 		<div class="table-responsive">
-			<table class="table table-striped table-bordered align-middle">
+			<table class="table table-striped table-bordered align-middle" id="tablaHoteles">
 				<thead class="table-dark">
 					<tr>
 						<th>Nombre</th>
@@ -41,21 +35,19 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="hotel : ${hoteles}">
+					<tr th:each="hotel : ${hoteles}" th:attr="data-hotel-id=${hotel.id}">
 						<td th:text="${hotel.nombre}">Hotel Nombre</td>
 						<td th:text="${hotel.direccion}">Av. Ejemplo 123</td>
 						<td class="text-center" th:text="${hotel.cantidadHabitaciones}">0</td>
 						<td class="text-center d-flex justify-content-center gap-2">
 							<a th:href="@{'/admin/hoteles/editar/' + ${hotel.id}}"
-								class="btn btn-sm btn-outline-primary" title="Editar">
+								class="btn btn-sm btn-outline-primary">
 								<i class="bi bi-pencil-square"></i>
 							</a>
-
-							<!-- Formulario de eliminación -->
 							<form th:action="@{/admin/hoteles/eliminar/{id}(id=${hotel.id})}" method="post"
 								onsubmit="return confirm('¿Deseas eliminar este hotel?');">
 								<input type="hidden" name="depId" th:value="${departamento.id}" />
-								<button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+								<button type="submit" class="btn btn-sm btn-outline-danger">
 									<i class="bi bi-trash"></i>
 								</button>
 							</form>
@@ -70,20 +62,97 @@
 			</table>
 		</div>
 
-		<!-- Botones de acción -->
+		<!-- Botones -->
 		<div class="d-flex gap-2 mt-4">
-			<a th:href="@{/admin/departamento/hoteles/seleccionar-departamento}" class="btn btn-secondary">
-				← Volver a departamentos
-			</a>
-
-			<a th:href="@{/admin/hoteles/nuevo}" class="btn btn-primary ms-auto">
-				+ Nuevo hotel
-			</a>
+			<!--falta corregir el url de volver-->
+			<a th:href="@{/admin/seleccionar_departamento}" class="btn btn-secondary">← Volver</a>
+			<a th:href="@{/admin/hoteles/nuevo}" class="btn btn-primary ms-auto">+ Nuevo hotel</a>
 		</div>
 	</div>
 
-	<!-- Bootstrap JS -->
+	<!-- Modal para disponibilidad -->
+	<div class="modal fade" id="modalDisponibilidad" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header bg-primary text-white">
+					<h5 class="modal-title">Disponibilidad de Habitaciones</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<div id="contenedorResultados">
+						<!-- Aquí se llenará con JS -->
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bootstrap JS y lógica -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		function consultarDisponibilidad() {
+			const fechaInicio = $('#fechaInicio').val();
+			const fechaFin = $('#fechaFin').val();
+
+			if (!fechaInicio || !fechaFin) {
+				alert("Selecciona ambas fechas.");
+				return;
+			}
+
+			// Recolectar IDs y nombres de hoteles
+			const hoteles = [];
+			$('#tablaHoteles tbody tr[data-hotel-id]').each(function () {
+				const id = $(this).data('hotel-id');
+				const nombre = $(this).find('td:first').text();
+				hoteles.push({id, nombre});
+			});
+
+			const contenedor = $('#contenedorResultados');
+			contenedor.empty();
+
+			// Por cada hotel, pedir su disponibilidad al backend
+			hoteles.forEach(hotel => {
+				$.ajax({
+					url: `/api/habitaciones/disponibles`,
+					method: 'GET',
+					data: {
+						hotelId: hotel.id,
+						fechaInicio: fechaInicio,
+						fechaFin: fechaFin
+					},
+					success: function (response) {
+						const disponible = response.disponible;
+						const cantidad = response.cantidad;
+
+						const html = `
+						<div class="border rounded p-3 mb-3">
+							<h5>${hotel.nombre}</h5>
+							<p>
+								<span class="badge bg-${disponible ? 'success' : 'danger'}">
+									${disponible ? '<i class="bi bi-check-circle-fill"></i> Disponible' : '<i class="bi bi-x-circle-fill"></i> No disponible'}
+								</span>
+								<span class="ms-3">Cantidad disponible: <strong>${disponible ? cantidad : 0}</strong></span>
+							</p>
+						</div>
+					`;
+						contenedor.append(html);
+					},
+					error: function () {
+						contenedor.append(`
+						<div class="alert alert-danger">Error al consultar el hotel ${hotel.nombre}</div>
+					`);
+					}
+				});
+			});
+
+			const modal = new bootstrap.Modal(document.getElementById('modalDisponibilidad'));
+			modal.show();
+		}
+	</script>
 </body>
 
 </html>

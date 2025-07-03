@@ -196,7 +196,7 @@ public class HotelReservaController {
         reserva.setId(null);
         reservaService.guardar(reserva);
 
-        return "/usuario/confirmacion";
+        return "usuario/confirmacion";
     }
     
   
